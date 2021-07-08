@@ -1,5 +1,6 @@
 const canvas = document.getElementById("jsCanvas");
 const ctx = canvas.getContext("2d");
+const colors = document.getElementsByClassName("jsColor");
 
 canvas.width = 700;//canvas크기 설정
 canvas.height = 700;
@@ -39,9 +40,19 @@ function onMouseUp(event){
     stopPainting();
 }
 
+function handleColorClick(event){
+    const color = event.target.style.backgroundColor;
+    console.log(color);
+    ctx.strokeStyle = color;//클릭한 색들로 변하게 지시
+}
+
 if(canvas){
     canvas.addEventListener("mousemove", onMouseMove);
     canvas.addEventListener("mousedown", startPainting);
     canvas.addEventListener("mouseup", stopPainting);
     canvas.addEventListener("mouseleave", stopPainting); //캔버스에 벗어났을때
 }
+
+Array.from(colors).forEach(color => 
+    color.addEventListener("click", handleColorClick)
+    );
