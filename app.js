@@ -1,14 +1,21 @@
 const canvas = document.getElementById("jsCanvas");
 const ctx = canvas.getContext("2d");
 const colors = document.getElementsByClassName("jsColor");
+const range = document.getElementById("jsRange");
+const mode = document.getElementById("jsMode");
 
-canvas.width = 700;//canvas크기 설정
-canvas.height = 700;
+const INITAL_COLOR = "#2c2c2c";
+const CANVAS_SIZE = 700;
 
-ctx.strokeStyle = "#2c2c2c";//첫번째 색 
+canvas.width = CANVAS_SIZE;//canvas크기 설정
+canvas.height = CANVAS_SIZE;
+
+ctx.strokeStyle = "INITAL_COLOR";//첫번째 색 
+ctx.fillStyle = "INITAL_COLOR";
 ctx.lineWidth = 2.5;//크기 조절 
 
 let painting = false;
+let filling = false;
 
 function stopPainting(){
     painting = false;
@@ -44,6 +51,28 @@ function handleColorClick(event){
     const color = event.target.style.backgroundColor;
     console.log(color);
     ctx.strokeStyle = color;//클릭한 색들로 변하게 지시
+    ctx.fillStyle = color;//채우기 색 조절
+}
+
+function handleRangeChange(event){//봇 사이즈 조정
+    const size = event.target.value;
+    ctx.lineWidth = size;
+}
+
+function handleModeClick(event){//채우기 기능
+    if(filling === true){//버튼을 변경
+        filling = false;
+        mode.innerText = "Fill";
+    }else{
+        filling = true;
+        mode.innerText = "Paint";
+    }
+}
+
+function handleCanvasClick(){
+    if(filling){
+        ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+    }
 }
 
 if(canvas){
@@ -51,8 +80,17 @@ if(canvas){
     canvas.addEventListener("mousedown", startPainting);
     canvas.addEventListener("mouseup", stopPainting);
     canvas.addEventListener("mouseleave", stopPainting); //캔버스에 벗어났을때
+    canvas.addEventListener("click", handleCanvasClick);
 }
 
 Array.from(colors).forEach(color => 
     color.addEventListener("click", handleColorClick)
     );
+
+if(range){
+    range.addEventListener("input", handleRangeChange);
+}
+
+if(mode){
+    mode.addEventListener("click", handleModeClick);
+}
